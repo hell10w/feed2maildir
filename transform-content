@@ -1,0 +1,53 @@
+#!/usr/bin/env python
+# encoding: utf-8
+
+"""
+Usage:
+  transform-content (--text | --markdown) (<filename> | -)
+  transform-content (-h | --help)
+"""
+
+from __future__ import absolute_import
+from __future__ import print_function
+import sys
+import codecs
+from json import dumps
+from json import loads
+from logging import getLogger, basicConfig, INFO
+
+try:
+    from docopt import docopt
+except ImportError:
+    print('pip install docopt')
+    sys.exit(1)
+
+from rss import get_content, markdown_transform, text_transform
+
+
+logger = getLogger()
+
+
+def main():
+    arguments = docopt(__doc__)
+
+    filename = arguments['<filename>']
+    content = get_content(filename)
+    if not content:
+        logger.info('No content')
+        return
+
+    items = loads(content)
+    if arguments['--markdown']:
+        data = markdown_transform(items)
+    elif arguments['--text']:
+        data = text_transform(items)
+    else:
+        raise NotImplementedError
+
+    sys.stdout = codecs.getwriter('utf-8')(sys.stdout)
+    sys.stdout.write(dumps(data, ensure_ascii=False))
+
+
+if __name__ == '__main__':
+    basicConfig(level=INFO)
+    main()

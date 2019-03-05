@@ -1,0 +1,11 @@
+MIME-Version: 1.0
+Date: {{ published_parsed.strftime('%a, %d %b %Y %H:%M:%S %z') }}
+Subject: {% if item.prefix %}{{ item.prefix }} | {% endif %}{{ item.title }}
+From:
+Content-Type: {{ content_type }}; charset='utf-8'
+
+{% if item.feed %}Feed: {{ item.feed.title }}{% if item.feed.subtitle %} | {{ item.feed.subtitle }}{% endif %} | {{ item.title }}{% endif %}
+{% if item.url %}Url: {{ item.url }}{% endif %}
+{% if item.tags %}Tags: {% for tag in item.tags %}{{ tag }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}
+
+{{ content }}

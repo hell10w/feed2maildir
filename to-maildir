@@ -1,0 +1,46 @@
+#!/usr/bin/env python
+# encoding: utf-8
+
+"""
+Usage:
+  to-maildir [--template=<template>] (<filename> | -) <maildir>...
+  to-maildir (-h | --help)
+"""
+
+from __future__ import unicode_literals
+from __future__ import absolute_import
+from __future__ import print_function
+import sys
+from json import loads
+from logging import getLogger, basicConfig, INFO
+
+try:
+    from docopt import docopt
+except ImportError:
+    print('pip install docopt')
+    sys.exit(1)
+
+from rss import get_content, to_maildir
+
+
+logger = getLogger()
+
+
+def main():
+    arguments = docopt(__doc__)
+
+    filename = arguments['<filename>']
+    content = get_content(filename)
+    if not content:
+        logger.info('No content')
+        return
+
+    items = loads(content)
+
+    to_maildir(items, arguments['<maildir>'],
+               template_path=arguments['--template'])
+
+
+if __name__ == '__main__':
+    basicConfig(level=INFO)
+    main()
