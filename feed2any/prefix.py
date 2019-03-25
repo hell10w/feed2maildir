@@ -3,27 +3,34 @@
 
 """
 Usage:
-  feed2json [--raw] (<filename> | -)
-  feed2json (-h | --help)
+  prefix (<filename> | -) <prefix>
+  prefix (-h | --help)
 """
 
 from __future__ import absolute_import
 from __future__ import print_function
-import sys
-import codecs
 from json import dumps
+from json import loads
 from logging import getLogger, basicConfig, INFO
 
-try:
-    from docopt import docopt
-except ImportError:
-    print('pip install docopt')
-    sys.exit(1)
+from docopt import docopt
 
-from rss import get_content, parse_feed
+from feed2any.rss import get_content, output
 
 
 logger = getLogger()
+
+
+def extend_dict(a, **kwargs):
+    a.update(kwargs)
+    return a
+
+
+def add_prefix(items, prefix):
+    return [
+        extend_dict(item, prefix=prefix)
+        for item in items
+    ]
 
 
 def main():
@@ -35,12 +42,11 @@ def main():
         logger.info('No content')
         return
 
-    raw = arguments['--raw']
+    prefix = arguments['<prefix>']
 
-    data = parse_feed(content, raw)
+    data = add_prefix(loads(content), prefix)
 
-    sys.stdout = codecs.getwriter('utf-8')(sys.stdout)
-    sys.stdout.write(dumps(data, ensure_ascii=False))
+    output(dumps(data, ensure_ascii=False))
 
 
 if __name__ == '__main__':
