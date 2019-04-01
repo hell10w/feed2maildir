@@ -19,22 +19,26 @@ setup(
         'feedparser',
         'jinja2',
         'python-dateutil',
+        'lxml',
         'html2text',
         'inscriptis'
     ],
     extras_require={
-        'twitter': ['python-twitter'],
+        # 'twitter': ['python-twitter'],
+        'discord': ['discord-webhook'],
     },
     test_suite='tests',
     include_package_data=True,
     entry_points={
         'console_scripts': [
-            'f2a--prefix=feed2any.prefix:main',
             'f2a--fetch=feed2any.fetch:main',
             'f2a--parse=feed2any.parse:main',
-            'f2a--to-twitter=feed2any.to_twitter:main',
+            'f2a--prefix=feed2any.prefix:main',
+            # 'f2a--to-twitter=feed2any.to_twitter:main',
+            'f2a--to-discord=feed2any.to_discord:main',
             'f2a--to-maildir=feed2any.to_maildir:main',
             'f2a--transform=feed2any.transform:main',
+            'f2a--plaintext=feed2any.plaintext:main',
         ],
     },
 )

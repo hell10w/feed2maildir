@@ -6,10 +6,10 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from logging import basicConfig, INFO
 
-from rss import fetch_feed
-from rss import parse_feed
-from rss import add_prefix
-from rss import to_maildir
+from feed2any.to_maildir import to_maildir
+from feed2any.prefix import add_prefix
+from feed2any.parse import parse_feed
+from feed2any.fetch import fetch_feed
 
 
 class Rss(object):

@@ -68,8 +68,8 @@ def split_items(content):
     parsed = feedparser.parse(content)
     generic = parsed['feed']
     feed = {
-        'url': generic['link'],
-        'title': generic['title'],
+        'url': generic.get('link', None),
+        'title': generic.get('title', None),
         'subtitle': generic.get('subtitle'),
     }
     for entry in parsed['entries']:

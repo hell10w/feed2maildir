@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 from __future__ import absolute_import
 from __future__ import print_function
 import time
@@ -10,7 +8,6 @@ from logging import getLogger
 import hashlib
 from os import makedirs
 from os.path import join, exists, dirname, abspath
-import codecs
 
 
 logger = getLogger()
@@ -29,7 +26,7 @@ def get_content(filename):
 
 def get_hash(*data):
     m = hashlib.md5()
-    m.update(dumps(data))
+    m.update(dumps(data).encode('utf-8'))
     return m.hexdigest()
 
 
@@ -49,8 +46,7 @@ def load_json(filename):
 
 
 def output(content):
-    sys.stdout = codecs.getwriter('utf-8')(sys.stdout)
-    sys.stdout.write(content.decode('utf-8'))
+    print(content.encode('utf-8'), end='', file=sys.stdout)
 
 
 @contextmanager
@@ -80,3 +76,9 @@ def skip_cache(cache, additional):
     dump_json(filename, cached)
 
 
+def get_description(item):
+    if 'text' in item:
+        return item['text']
+    for content_type, content in item['content'].items():
+        return content
+    return ''

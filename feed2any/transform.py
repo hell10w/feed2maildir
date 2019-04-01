@@ -12,6 +12,7 @@ from __future__ import print_function
 from json import dumps
 from json import loads
 from logging import getLogger, basicConfig, INFO
+import re
 
 from docopt import docopt
 import html2text
@@ -43,9 +44,17 @@ def markdown_transform(items):
     return process_items(items, f)
 
 
-def text_transform(items):
-    f = lambda text: inscriptis.get_text(text, display_links=True)
+def whitespace_transform(items):
+    strip_white = re.compile(r'\s{2,}')
+    f = lambda text: strip_white.sub(' ', text)
     return process_items(items, f)
+
+
+def text_transform(items):
+    f = lambda text: inscriptis.get_text(text,
+                                         display_links=True,
+                                         display_images=True)
+    return whitespace_transform(process_items(items, f))
 
 
 def main():

@@ -61,9 +61,9 @@ def get_feed(url, cache_path, invalidate=False, ttl=None):
                      url, response.status_code)
         return
 
-    content = response.content
+    content = response.text
     with open(filename, 'w') as output:
-        output.write(content)
+        output.write(content.encode('utf-8'))
 
     dump_json(timestamp_filename, now)
 
